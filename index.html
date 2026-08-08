@@ -1540,7 +1540,7 @@
             <i class="fas fa-chevron-down"></i>
         </div>
 
-        <!-- 页面间晕染过渡层（只影响红线区域） -->
+        <!-- 页面间晕染过渡层 -->
         <div class="blur-transition"></div>
     </section>
 
@@ -1699,7 +1699,7 @@
             <div class="stage-thumbnail">
                 <img src="images/tambourine.jpg" alt="Tambourine" onerror="this.style.display='none'; this.parentElement.querySelector('.thumb-icon').style.display='block';">
                 <i class="fas fa-star thumb-icon" style="display:none;"></i>
-                <span class="stage-badge">逆流</span>
+                <span class="stage-badge">舞台</span>
                 <div class="play-overlay"><i class="fas fa-play"></i></div>
             </div>
             <div class="stage-content">
@@ -2105,15 +2105,27 @@
             return div.innerHTML;
         }
 
-        function formatDate(timestamp) {
-            const date = new Date(timestamp);
-            const now = new Date();
-            const diff = now - date;
-            if (diff < 60000) return '刚刚';
-            if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
-            if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
-            return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-        }
+       function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now - date;
+
+    // 3 小时内：显示相对时间
+    if (diff < 60000) return '刚刚';
+    if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+    if (diff < 10800000) return Math.floor(diff / 3600000) + '小时前';
+
+    // 超过 3 小时：显示北京时间，格式如 2026.08.08 17:00
+    const fmt = new Intl.DateTimeFormat('zh-CN', {
+        timeZone: 'Asia/Shanghai',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit',
+        hour12: false
+    });
+    const parts = fmt.formatToParts(date);
+    const get = (type) => parts.find(p => p.type === type).value;
+    return `${get('year')}.${get('month')}.${get('day')} ${get('hour')}:${get('minute')}`;
+}
 
         // 提交留言
         guestbookForm.addEventListener('submit', async (e) => {
