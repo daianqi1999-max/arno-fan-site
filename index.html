@@ -2105,17 +2105,30 @@
             return div.innerHTML;
         }
 
-       function formatDate(timestamp) {
-    const date = new Date(timestamp);
+      function formatDate(timestamp) {
+    let date;
+    if (typeof timestamp === 'string') {
+        // 把 "2026-08-08 03:43:45" 标准化成 ISO 格式
+        let iso = timestamp.trim().replace(' ', 'T').replace(/\.\d+$/, '');
+        // 如果不带时区标记，视为 UTC 时间（加 Z）
+        if (!iso.endsWith('Z') && !iso.match(/[+-]\d{2}:?\d{2}$/)) {
+            iso += 'Z';
+        }
+        date = new Date(iso);
+    } else {
+        date = new Date(timestamp);
+    }
+
     const now = new Date();
     const diff = now - date;
 
     // 3 小时内：显示相对时间
+    if (diff < 0) return '刚刚';
     if (diff < 60000) return '刚刚';
     if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
     if (diff < 10800000) return Math.floor(diff / 3600000) + '小时前';
 
-    // 超过 3 小时：显示北京时间，格式如 2026.08.08 17:00
+    // 超过 3 小时：显示北京时间
     const fmt = new Intl.DateTimeFormat('zh-CN', {
         timeZone: 'Asia/Shanghai',
         year: 'numeric', month: '2-digit', day: '2-digit',
