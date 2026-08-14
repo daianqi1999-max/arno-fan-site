@@ -982,22 +982,24 @@
          }
 
         .news-link,
-        .news-link:visited {        /* ← 加上这行，强制已访问链接也是白色 */
-             color: #ffffff;
-             font-size: 1rem;
-             font-weight: 500;
-             text-decoration: none;
-             display: inline-flex;
-             align-items: center;
-             gap: 0.5rem;
-             transition: all 0.3s ease;
-             text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-         }
+        #news .news-link,
+        #news .news-link:link,
+        #news .news-link:visited {
+        color: #ffffff !important;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+         text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+        }
 
-         .news-link:hover {
-              color: var(--accent-light);   /* 悬停时保留高亮色，或者也改成 #ffffff */
-               gap: 0.8rem;
-         }
+          #news .news-link:hover {
+          color: var(--accent-light) !important;
+          gap: 0.8rem;
+          }
 
         /* 粉丝留言板 Guestbook */
         #guestbook {
